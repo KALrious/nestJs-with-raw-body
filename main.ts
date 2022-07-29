@@ -6,7 +6,10 @@ const bodyParser = require("body-parser");
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true, });
-  const rawBodyBuffer = (req, res, buf, encoding) => {
+  /** until v9.0.5 https://github.com/nestjs/nest/releases/tag/v9.0.5
+   *  with this issue https://github.com/nestjs/nest/issues/9901
+   * with this PR close https://github.com/nestjs/nest/pull/9926 */
+  const rawBodyBuffer = (req: { rawBody: any; }, res: any, buf: Buffer, encoding: any) => {
         if (buf && buf.length) {
             req.rawBody = buf.toString(encoding || 'utf8');
         }
